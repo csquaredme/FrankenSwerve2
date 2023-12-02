@@ -164,7 +164,7 @@ public class SwerveModule extends SubsystemBase {
    final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint()); 
    
-   m_turningMotor.set(turnOutput + turnFeedforward);
+   m_turningMotor.set(turnOutput);
 
     m_desiredState = desiredState;
 
@@ -174,6 +174,7 @@ public class SwerveModule extends SubsystemBase {
    /** Zeroes all the SwerveModule encoders. */
    public void resetEncoders() {
     m_driveEncoder.setPosition(0);
+    m_turningEncoder.reset();
   }
  
   @Override
