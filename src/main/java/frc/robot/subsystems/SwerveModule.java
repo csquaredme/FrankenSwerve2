@@ -46,7 +46,7 @@ public class SwerveModule extends SubsystemBase {
 
   // Gains are for example purposes only - must be determined for your own robot!
   //private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(1, 3);
-  //private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(1, 0.5);
+  private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(1, 0.5);
 
 
    /**
@@ -161,7 +161,10 @@ public class SwerveModule extends SubsystemBase {
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     m_drivePIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
    // m_turningPIDController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
-    m_turningMotor.set(turnOutput);
+   final double turnFeedforward =
+        m_turnFeedforward.calculate(m_turningPIDController.getSetpoint()); 
+   
+   m_turningMotor.set(turnOutput + turnFeedforward);
 
     m_desiredState = desiredState;
 
