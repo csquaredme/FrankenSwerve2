@@ -29,22 +29,26 @@ public class DriveTrain extends SubsystemBase {
           ControlSystem.kLeftFrontDrive,
           ControlSystem.kLeftFrontTurn, 
           ControlSystem.kLFturnA, 
-          ControlSystem.kLFturnB);
+          ControlSystem.kLFturnB,
+          DriveConstants.kFrontLeftChassisAngularOffset);
   private final SwerveModule m_frontRight = new SwerveModule(
           ControlSystem.kRightFrontDrive,
           ControlSystem.kRightFrontTurn, 
           ControlSystem.kRFturnA, 
-          ControlSystem.kRFturnB);
+          ControlSystem.kRFturnB,
+          DriveConstants.kFrontRightChassisAngularOffset);
   private final SwerveModule m_backLeft = new SwerveModule(
           ControlSystem.kLeftBackDrive,
           ControlSystem.kLeftBackTurn, 
           ControlSystem.kLBturnA, 
-          ControlSystem.kLBturnB);
+          ControlSystem.kLBturnB,
+          DriveConstants.kBackLeftChassisAngularOffset);
   private final SwerveModule m_backRight = new SwerveModule(
           ControlSystem.kRightBackDrive,
           ControlSystem.kRightBackTurn, 
           ControlSystem.kRBturnA, 
-          ControlSystem.kRBturnB);
+          ControlSystem.kRBturnB,
+          DriveConstants.kBackRightChassisAngularOffset);
 
   private final ADIS16448_IMU m_imu = new ADIS16448_IMU();
 

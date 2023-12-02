@@ -61,7 +61,8 @@ public class SwerveModule extends SubsystemBase {
     int driveMotorChannel,
     int turningMotorChannel,
     int turningEncoderChannelA,
-    int turningEncoderChannelB) {
+    int turningEncoderChannelB,
+    double chassisAngularOffset) {
 
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new WPI_VictorSPX(turningMotorChannel);
@@ -97,6 +98,9 @@ public class SwerveModule extends SubsystemBase {
     // to be continuous.
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
+    m_chassisAngularOffset = chassisAngularOffset;
+    m_desiredState.angle = new Rotation2d(m_turningEncoder.getDistance());
+    m_driveEncoder.setPosition(0);
   }
 
   
@@ -144,19 +148,19 @@ public class SwerveModule extends SubsystemBase {
 
     SwerveModuleState correctedDesiredState = new SwerveModuleState();
     correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
-    //correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(m_chassisAngularOffset));
+    correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(m_chassisAngularOffset));
 
     // Optimize the reference state to avoid spinning further than 90 degrees.
        SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
          new Rotation2d());
 
 
-    var encoderRotation = new Rotation2d(m_turningEncoder.getDistance());
-     // Optimize the reference state to avoid spinning further than 90 degrees
-    SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation);
+    // var encoderRotation = new Rotation2d(m_turningEncoder.getDistance());
+    // Optimize the reference state to avoid spinning further than 90 degrees
+    //SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation);
     // Calculate the turning motor output from the turning PID controller.
     final double turnOutput =
-        m_turningPIDController.calculate(m_turningEncoder.getDistance(), state.angle.getRadians());
+        m_turningPIDController.calculate(m_turningEncoder.getDistance(), correctedDesiredState.angle.getRadians());
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     m_drivePIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
