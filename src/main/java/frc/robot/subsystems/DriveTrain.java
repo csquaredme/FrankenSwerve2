@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 
@@ -122,14 +123,15 @@ public class DriveTrain extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_backLeft.setDesiredState(swerveModuleStates[2]);
     m_backRight.setDesiredState(swerveModuleStates[3]);         
-}
-  
-public void resetEncoders() {
-  m_frontLeft.resetEncoders();
-  m_backLeft.resetEncoders();
-  m_frontRight.resetEncoders();
-  m_backRight.resetEncoders();
-}
+  }
+    
+  public void resetEncoders() {
+    m_frontLeft.resetEncoders();
+    m_backLeft.resetEncoders();
+    m_frontRight.resetEncoders();
+    m_backRight.resetEncoders();
+  }
+
   
   /**
    * Example command factory method.

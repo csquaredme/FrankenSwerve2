@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -24,14 +25,20 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ControlSystem;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 
 
 /**
@@ -49,8 +56,18 @@ public class RobotContainer {
   private final CommandJoystick m_driverJoystick =
       new CommandJoystick(OperatorConstants.kDriverControllerPort);
 
+
+  private final CANSparkMax m_FLDMax = new CANSparkMax(ControlSystem.kLeftFrontDrive, MotorType.kBrushless);
+  private final RelativeEncoder m_FLDE = m_FLDMax.getEncoder();
+  public double FrontLeftDriveEncoder = m_FLDE.getVelocity();
+  
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Configure data on the SmartDashboard
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putNumber("Front Left Speed", FrontLeftDriveEncoder);
+
     // Configure the trigger bindings
     configureBindings();
 
