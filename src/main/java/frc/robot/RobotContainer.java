@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.SwerveModule;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -57,16 +58,33 @@ public class RobotContainer {
       new CommandJoystick(OperatorConstants.kDriverControllerPort);
 
 
-  private final CANSparkMax m_FLDMax = new CANSparkMax(ControlSystem.kLeftFrontDrive, MotorType.kBrushless);
-  private final RelativeEncoder m_FLDE = m_FLDMax.getEncoder();
-  public double FrontLeftDriveEncoder = m_FLDE.getVelocity();
+  
+  //private final RelativeEncoder m_FLDE = m_FLDMax.getEncoder();
+  //public double FrontLeftDriveEncoder = m_FLDE.getVelocity();
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure data on the SmartDashboard
-    SmartDashboard.putData(CommandScheduler.getInstance());
-    SmartDashboard.putNumber("Front Left Speed", FrontLeftDriveEncoder);
+  
+    //SmartDashboard.putData(CommandScheduler.getInstance());
+    double counter = 0.0; SmartDashboard.putNumber("Counter", counter++);
+    //SmartDashboard.putNumber("Front Left Speed", FrontLeftDriveEncoder);
+    SmartDashboard.putNumber("Joystick X", -MathUtil.applyDeadband(m_driverJoystick.getX(), DriveConstants.kDriveDeadband));
+    SmartDashboard.putNumber("Joystick Y", -MathUtil.applyDeadband(m_driverJoystick.getY(), DriveConstants.kDriveDeadband));
+    SmartDashboard.putNumber("Joystick Z", -MathUtil.applyDeadband(m_driverJoystick.getZ(), DriveConstants.kDriveDeadband));
+    SmartDashboard.putNumber("Joystick Raw X", m_driverJoystick.getX());
+    SmartDashboard.putNumber("Joystick Raw Y", m_driverJoystick.getY());
+    SmartDashboard.putNumber("Joystick Raw Z", m_driverJoystick.getZ());
+    //Display Odometry IMU angle
+    SmartDashboard.putNumber("Odometry Angle", m_robotDrive.getOdometryAngle());
+    //DIsplay Kinematics
+    SmartDashboard.putNumber("Front Right Encoder Count", m_robotDrive.TurnCountFR());
+
+    SmartDashboard.putNumber("Front Left Drive Speed", m_robotDrive.DriveVelFL());
+    SmartDashboard.putNumber("Front Right Drive Speed", m_robotDrive.DriveVelFR());
+    SmartDashboard.putNumber("Back Left Drive Speed", m_robotDrive.DriveVelBL());
+    SmartDashboard.putNumber("Back Right Drive Speed", m_robotDrive.DriveVelBR());
 
     // Configure the trigger bindings
     configureBindings();

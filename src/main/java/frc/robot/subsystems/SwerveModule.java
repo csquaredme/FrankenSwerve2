@@ -139,7 +139,7 @@ public class SwerveModule extends SubsystemBase {
     //final double driveFeedforward = m_driveFeedforward.calculate(state.speedMetersPerSecond);
 
     final double driveOutput  = m_drivePIDController.calculate(m_driveEncoder.getVelocity(), state.speedMetersPerSecond);
-    //final double turnFeedforward = m_turnFeedforward.calculate(m_turningPIDController.getSetpoint());
+    final double turnFeedforward = m_turnFeedforward.calculate(m_turningPIDController.getSetpoint());
 
 
     // Calculate the turning motor output from the turning PID controller.
@@ -168,8 +168,8 @@ public class SwerveModule extends SubsystemBase {
    final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint()); 
    
-   m_turningMotor.set(turnOutput);
-
+    m_turningMotor.set(turnOutput + turnFeedforward);
+    
     m_desiredState = desiredState;
 
     
@@ -181,7 +181,15 @@ public class SwerveModule extends SubsystemBase {
     m_turningEncoder.reset();
   }
 
-  
+  public int TurnOutput() {
+    int turn = m_turningEncoder.get();
+    return turn;
+  }
+
+  public double DriveOutput() {
+    double drive = m_driveEncoder.getVelocity();
+    return drive;
+  }
  
   @Override
   public void periodic() {
